@@ -4,8 +4,6 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     public float moveSpeed = 5f;
-    public Sprite[] spriteUp;
-    public Sprite[] spriteDown;
     public Sprite[] spriteLeft;
     public Sprite[] spriteRight;
     public float frameTime = 0.15f;
@@ -23,13 +21,16 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
 
-        currentSprites = spriteDown;
+        currentSprites = spriteRight;
         sr.sprite = currentSprites[0];
     }
 
     // Update is called once per frame
     private void Update()
     {
+        UpdateSpriteByMouse();
+
+
         if(input.sqrMagnitude <= 0.01f)
         {
             frameIndex = 0;
@@ -51,6 +52,16 @@ public class PlayerController : MonoBehaviour
             
         }
     }
+
+    private void UpdateSpriteByMouse()
+    {
+        Vector3 mouseWorld = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+        if (mouseWorld.x >= transform.position.x)
+            ChangeSprites(spriteRight);
+        else
+            ChangeSprites(spriteLeft);
+    }
+
 
     private void FixedUpdate()
     {
@@ -74,30 +85,5 @@ public class PlayerController : MonoBehaviour
         input = value.Get<Vector2>();
         velocity = input.normalized * moveSpeed;
 
-        if(input.sqrMagnitude > 0.01f)
-        {
-            if(Mathf.Abs(input.x) > Mathf.Abs(input.y))
-            {
-                if(input.x > 0)
-                {
-                    ChangeSprites(spriteRight);
-                }
-                else
-                {
-                    ChangeSprites(spriteLeft);
-                }
-            }
-            else
-            {
-                if(input.y > 0)
-                {
-                    ChangeSprites(spriteUp);
-                }
-                else
-                {
-                    ChangeSprites(spriteDown);
-                }
-            }
-        }
     }
 }
