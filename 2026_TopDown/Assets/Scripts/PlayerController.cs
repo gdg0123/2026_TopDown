@@ -4,9 +4,11 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     public float moveSpeed = 5f;
+
     public Sprite[] spriteLeft;
     public Sprite[] spriteRight;
     public float frameTime = 0.15f;
+
     private Rigidbody2D rb;
     private SpriteRenderer sr;
     private Vector2 input;
@@ -14,6 +16,16 @@ public class PlayerController : MonoBehaviour
     private Sprite[] currentSprites;
     private int frameIndex = 0;
     private float timer = 0f;
+
+    public float dashSpeed = 10f;
+    public float dashDuration = 0.15f;
+    public float dashCooldown = 1f;
+    private bool isDashing = false;
+    private float dashTimer = 0f;
+    private float cooldownTimer = 0f;
+    private Vector2 dashDirection;
+
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Awake()
@@ -51,6 +63,24 @@ public class PlayerController : MonoBehaviour
             sr.sprite = currentSprites[frameIndex];
             
         }
+
+
+        cooldownTimer -= Time.deltaTime;
+
+        if(isDashing)
+        {
+            dashTimer -= Time.deltaTime;
+
+            if (dashTimer <= 0f)
+                StopDash();
+            return;
+        }
+
+        if(Input.GetKeyDown(KeyCode.LeftShift) && cooldownTimer <= 0f)
+        {
+            StartDash();
+            return;
+        }
     }
 
     private void UpdateSpriteByMouse()
@@ -65,8 +95,39 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        rb.MovePosition(rb.position + velocity * Time.fixedDeltaTime);
+        if (isDashing)
+        {
+            rb.MovePosition(rb.position + dashDirection * dashSpeed * Time.fixedDeltaTime);
+        }
+        else
+        {
+            rb.MovePosition(rb.position + velocity * Time.fixedDeltaTime);
+        }
     }
+
+
+    private void StartDash()
+    {
+        if (input.sqrMagnitude > 0.01f)
+            dashDirection = input.normalized;
+        else
+        {
+            Vector3 mouseWorld = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+            dashDirection = ((Vector2)(mouseWorld - transform.position)).normalized;
+        }
+
+        isDashing = true;
+        dashTimer = dashDuration;
+        cooldownTimer = dashCooldown;
+    }
+
+    private void StopDash()
+    {
+        isDashing = false;
+    }
+
+
+
 
     private void ChangeSprites(Sprite[] newSprites)
     {

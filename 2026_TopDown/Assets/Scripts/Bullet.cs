@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    public float damage = 10f;
+    public int damage = 1;
     public float lifetime = 3f;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -20,8 +20,8 @@ public class Bullet : MonoBehaviour
     {
         if(other.CompareTag("Enemy"))
         {
-            //other.GetComponent<EnemyHealth>()?.TakeDamager(damage);
-            //Destroy(gameObject);
+            other.GetComponent<Enemy1>()?.TakeDamage(damage);
+            Destroy(gameObject);
         }
     }
 }
