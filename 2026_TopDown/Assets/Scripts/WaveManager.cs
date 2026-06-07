@@ -9,6 +9,7 @@ public class WaveManager : MonoBehaviour
     public float waveTime = 20f;
     private float timer;
     private bool isCleared = false;
+    private int currentLevel = 2;
 
     [Header("UI")]
     public CanvasGroup stageUpCanvasGroup;
@@ -18,6 +19,12 @@ public class WaveManager : MonoBehaviour
 
     [Header("EnemySpawner")]
     public EnemySpawner enemySpawner;
+
+    [Header("Scene")]
+    public string gameOverScene = "GameOver";
+    public string gameClearScene = "GameClear";
+    public int totalLevels = 5;
+
 
 
 
@@ -58,6 +65,8 @@ public class WaveManager : MonoBehaviour
 
         DestroyAllEnemies();
 
+        UpdateStageText();
+
         yield return StartCoroutine(FadeCanvasGroup(0f, 1f, fadeDuration));
 
         
@@ -95,6 +104,29 @@ public class WaveManager : MonoBehaviour
 
     void GoToNextLevel()
     {
-        
+        if(currentLevel >= totalLevels)
+        {
+            SceneManager.LoadScene(gameClearScene);
+            return;
+        }
+
+        currentLevel++;
+        timer = waveTime;
+        isCleared = false;
+
+        if(enemySpawner != null)
+        {
+            enemySpawner.isSpawning = true;
+        }
     }
+
+    void UpdateStageText()
+    {
+        if(stageText != null)
+        {
+            stageText.text = $"Stage {currentLevel}";
+        }
+    }
+
+
 }

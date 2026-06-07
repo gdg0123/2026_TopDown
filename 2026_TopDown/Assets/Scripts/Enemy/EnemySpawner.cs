@@ -5,7 +5,7 @@ public class EnemySpawner : MonoBehaviour
     [Header("Enemy 스폰 설정")]
     public GameObject enemyPrefabs;
     public Transform[] spawnPoints;
-    private bool isSpawning = true;
+    public bool isSpawning = true;
 
     [Header("스폰 타이밍 설정")]
     public float minSpawnInterval = 0.5f;       //최소 생성 간격
