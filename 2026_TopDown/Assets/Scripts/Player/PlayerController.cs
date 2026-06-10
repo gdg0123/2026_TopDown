@@ -147,4 +147,10 @@ public class PlayerController : MonoBehaviour
         velocity = input.normalized * moveSpeed;
 
     }
+
+    public void IncreaseMoveSpeed(float amount)
+    {
+        moveSpeed += amount;
+    }
+
 }

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    public int damage = 1;
+    public float damage = 1;
     public float lifetime = 3f;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -24,4 +24,15 @@ public class Bullet : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
+    public void IncreaseLifetime(float amount)
+    {
+        lifetime = Mathf.Max(0.05f, lifetime - amount); // 최소값 제한
+    }
+
+    public void IncreaseDamage(float amount)
+    {
+        damage += amount;
+    }
+
 }

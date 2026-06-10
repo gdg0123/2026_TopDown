@@ -63,4 +63,11 @@ public class PlayerHealth : MonoBehaviour
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene(2);
     }
+
+    public void IncreaseMaxHp(int amount)
+    {
+        maxHp += amount;
+        currentHp += amount;
+        PlayerHPManager.Instance?.UpdateHP(currentHp, maxHp);
+    }
 }

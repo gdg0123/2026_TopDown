@@ -17,6 +17,8 @@ public class Enemy1 : MonoBehaviour
     public float flashDuration = 0.1f;
     private Color originalColor;
 
+    public int expReward = 1;
+
     
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -58,6 +60,7 @@ public class Enemy1 : MonoBehaviour
     }
     void Die()
     {
+        ExpManager.Instance?.AddExp(expReward);
         Destroy(gameObject);
     }
 
