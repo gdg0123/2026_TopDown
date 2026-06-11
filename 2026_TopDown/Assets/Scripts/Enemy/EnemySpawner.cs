@@ -2,26 +2,22 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
-    [Header("Enemy 스폰 설정")]
-    public GameObject enemyPrefabs;
+    [Header("Spawn Points")]
     public Transform[] spawnPoints;
+
+    [Header("Wave Data")]
+    public WaveData[] waveDatas;
+    private WaveData currentWave;
+
     public bool isSpawning = true;
-
-    [Header("스폰 타이밍 설정")]
-    public float minSpawnInterval = 0.5f;       //최소 생성 간격
-    public float maxSpawnInterval = 1.5f;       //최대 생성 간격
-    public float timer = 0.0f;
-    public float nextSpawnTime;                 //다음 생성시간
-
-    [Header("Enemy 스폰 확률 설정")]
-    [Range(0, 100)]
-    public int enemySpawnChance = 60;             //생성될 확률(0~100) => 60
-
+    private float timer = 0f;
+    private float nextSpawnTime;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        SetWave(0);
         SetNextSpawnTime();
     }
 
@@ -36,28 +32,65 @@ public class EnemySpawner : MonoBehaviour
         if (timer > nextSpawnTime)
         {
             SpawnEnemy();                       //프리팹 생성 함수를 호출한다
-            timer = 0.0f;                       //시간을 초기화 시켜준다
+            timer = 0f;                         //시간을 초기화 시켜준다
             SetNextSpawnTime();                 //다시 함수 실행
         }
+    }
+
+    public void SetWave(int stageIndex)
+    {
+        if (stageIndex >= waveDatas.Length)
+            stageIndex = waveDatas.Length - 1;
+
+        currentWave = waveDatas[stageIndex];
+        isSpawning = true;
+        timer = 0f;
+        SetNextSpawnTime();
     }
 
     void SpawnEnemy()
     {
         int randomValue = Random.Range(0, 100);
+        if (randomValue >= currentWave.spawnChance) return;
 
-        if (randomValue < enemySpawnChance)
-        {
-            int randomIndex = Random.Range(0, spawnPoints.Length);
-            Transform selectedPoint = spawnPoints[randomIndex];
-            Instantiate(enemyPrefabs, selectedPoint.position, selectedPoint.rotation);       //코인 프리팹을 해당 위치에 생성한다
-        }
+        // 랜덤 스폰 위치
+        Transform spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
+
+        EnemySpawnInfo selected = GetRandomEnemy();
+        if (selected == null) return;
+
+        // 프리팹 생성 후 EnemyData 연결
+        GameObject obj = Instantiate(selected.enemyPrefab, spawnPoint.position, spawnPoint.rotation);
+        obj.GetComponent<Enemy1>().data = selected.enemyData;
 
     }
 
-
-    void SetNextSpawnTime()          //최소~최대 사이의 랜덤한 시간 설정
+    EnemySpawnInfo GetRandomEnemy()
     {
-        nextSpawnTime = Random.Range(minSpawnInterval, maxSpawnInterval);
+        if (currentWave.enemies.Length == 0) return null;
+
+        int totalWeight = 0;
+        foreach (EnemySpawnInfo info in currentWave.enemies)
+            totalWeight += info.spawnWeight;
+
+        int rand = Random.Range(0, totalWeight);
+        int cumulative = 0;
+
+        foreach (EnemySpawnInfo info in currentWave.enemies)
+        {
+            cumulative += info.spawnWeight;
+            if (rand < cumulative)
+                return info;
+        }
+
+        return currentWave.enemies[0];
+    }
+
+
+    void SetNextSpawnTime()       
+    {
+        if (currentWave == null) return;
+        nextSpawnTime = Random.Range(currentWave.minSpawnInterval, currentWave.maxSpawnInterval);
     }
 
     public void StopSpawning()

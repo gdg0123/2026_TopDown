@@ -3,28 +3,19 @@ using UnityEngine;
 
 public class Enemy1 : MonoBehaviour
 {
-    public float moveSpeed = 3f;
-    public int maxHp = 3;
-    public float currentHp;
-    public int damage = 1;
-    public float attackCooldown = 1f;
-    private float attackTimer = 0f;
+    public EnemyData data;
 
+    public float currentHp;
+    private float attackTimer = 0f;
     private Transform player;
     private Rigidbody2D rb;
     private SpriteRenderer sr;
-
-    public float flashDuration = 0.1f;
     private Color originalColor;
-
-    public int expReward = 1;
-
-    
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        currentHp = maxHp;
+        currentHp = data.maxHp;
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
@@ -45,7 +36,7 @@ public class Enemy1 : MonoBehaviour
         if (player == null) return;
 
         Vector2 direction = (player.position - transform.position).normalized;
-        rb.linearVelocity = direction * moveSpeed;
+        rb.linearVelocity = direction * data.moveSpeed;
     }
 
     public void TakeDamage(float dmg)
@@ -60,14 +51,14 @@ public class Enemy1 : MonoBehaviour
     }
     void Die()
     {
-        ExpManager.Instance?.AddExp(expReward);
+        ExpManager.Instance?.AddExp(data.expReward);
         Destroy(gameObject);
     }
 
     IEnumerator FlashRed()
     {
         sr.color = Color.red;
-        yield return new WaitForSeconds(flashDuration);
+        yield return new WaitForSeconds(data.flashDuration);
         sr.color = originalColor;
     }
 
@@ -75,8 +66,8 @@ public class Enemy1 : MonoBehaviour
     {
         if (other.CompareTag("Player") && attackTimer <= 0f)
         {
-            other.GetComponent<PlayerHealth>()?.TakeDamage(damage);
-            attackTimer = attackCooldown;
+            other.GetComponent<PlayerHealth>()?.TakeDamage(data.damage);
+            attackTimer = data.attackCooldown;
         }
     }
 }

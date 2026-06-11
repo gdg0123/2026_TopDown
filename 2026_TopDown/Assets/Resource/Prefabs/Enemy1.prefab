@@ -179,9 +179,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3bf79829c930f0b4f948845967c120fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy1
-  moveSpeed: 1.5
-  maxHp: 3
+  data: {fileID: 11400000, guid: b2b5697be3fc6e740ba322efeb019ae0, type: 2}
   currentHp: 0
-  damage: 1
-  attackCooldown: 1
-  flashDuration: 0.1

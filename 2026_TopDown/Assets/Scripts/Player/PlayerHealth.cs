@@ -4,7 +4,7 @@ using UnityEngine;
 public class PlayerHealth : MonoBehaviour
 {
     public int maxHp = 3;
-    private int currentHp;
+    private float currentHp;
 
     public float invincibleTime = 1f;
     public float flashDuration = 0.1f;
@@ -27,7 +27,7 @@ public class PlayerHealth : MonoBehaviour
         
     }
 
-    public void TakeDamage(int dmg = 1)
+    public void TakeDamage(float dmg = 1)
     {
         if (isInvincible) return;
 
@@ -67,7 +67,13 @@ public class PlayerHealth : MonoBehaviour
     public void IncreaseMaxHp(int amount)
     {
         maxHp += amount;
-        currentHp += amount;
+
+        if (currentHp < maxHp)
+        {
+            currentHp += amount;
+            currentHp = Mathf.Min(currentHp, maxHp);
+        }
+
         PlayerHPManager.Instance?.UpdateHP(currentHp, maxHp);
     }
 }

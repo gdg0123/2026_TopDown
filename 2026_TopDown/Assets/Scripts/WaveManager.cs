@@ -5,11 +5,11 @@ using UnityEngine.SceneManagement;
 
 public class WaveManager : MonoBehaviour
 {
-    [Header("Wave ����")]
+    [Header("Wave")]
     public float waveTime = 20f;
     private float timer;
     private bool isCleared = false;
-    private int currentLevel = 2;
+    private int currentLevel = 1;
 
     [Header("UI")]
     public CanvasGroup stageUpCanvasGroup;
@@ -37,6 +37,8 @@ public class WaveManager : MonoBehaviour
         {
             stageUpCanvasGroup.alpha = 0f;
         }
+
+        StartCoroutine(ShowStartStage());
     }
 
     // Update is called once per frame
@@ -53,6 +55,15 @@ public class WaveManager : MonoBehaviour
             StartCoroutine(ClearWaveRoutine());
         }
     }
+
+    IEnumerator ShowStartStage()
+    {
+        stageText.text = $"Stage {currentLevel}";
+        yield return StartCoroutine(FadeCanvasGroup(0f, 1f, fadeDuration));
+        yield return new WaitForSeconds(displayDuration);
+        yield return StartCoroutine(FadeCanvasGroup(1f, 0f, fadeDuration));
+    }
+
 
     IEnumerator ClearWaveRoutine()
     {
@@ -114,17 +125,14 @@ public class WaveManager : MonoBehaviour
         timer = waveTime;
         isCleared = false;
 
-        if(enemySpawner != null)
-        {
-            enemySpawner.isSpawning = true;
-        }
+        enemySpawner.SetWave(currentLevel - 1);
     }
 
     void UpdateStageText()
     {
         if(stageText != null)
         {
-            stageText.text = $"Stage {currentLevel}";
+            stageText.text = $"Stage {currentLevel + 1}";
         }
     }
 

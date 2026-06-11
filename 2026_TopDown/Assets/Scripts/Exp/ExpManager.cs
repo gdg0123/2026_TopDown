@@ -88,7 +88,7 @@ public class ExpManager : MonoBehaviour
                 FindAnyObjectByType<Attacker>()?.IncreaseFirerate(item.value);
                 break;
             case StatType.Damage:
-                FindAnyObjectByType<Bullet>()?.IncreaseDamage(item.value);
+                FindAnyObjectByType<Attacker>()?.IncreaseDamage(item.value);
                 break;
         }
     }

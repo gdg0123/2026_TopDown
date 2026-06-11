@@ -18,7 +18,7 @@ public class Bullet : MonoBehaviour
         
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    void OnTriggerEnter2D(Collider2D other)
     {
         if(other.CompareTag("Enemy"))
         {
@@ -27,10 +27,7 @@ public class Bullet : MonoBehaviour
         }
     }
 
-    public void IncreaseDamage(float amount)
-    {
-        damage += amount;
-    }
+    
 
 
 }
