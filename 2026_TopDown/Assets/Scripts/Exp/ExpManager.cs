@@ -6,13 +6,13 @@ public class ExpManager : MonoBehaviour
 {
     public static ExpManager Instance;
 
-    [Header("°æÇèÄ¡ ¼³Á¤")]
+    [Header("ï¿½ï¿½ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½")]
     public int currentLevel = 1;
     public int currentExp = 0;
     public int baseExp = 10;
     public float expMultiplier = 1.5f;
 
-    [Header("¾ÆÀÌÅÛ")]
+    [Header("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½")]
     public List<ItemData> itemPool;
 
     public int ExpToNextLevel => Mathf.RoundToInt(baseExp * Mathf.Pow(expMultiplier, currentLevel - 1));
@@ -50,7 +50,7 @@ public class ExpManager : MonoBehaviour
     void LevelUp()
     {
         currentLevel++;
-        Debug.Log("ÇöÀç ·¹º§: " + currentLevel);
+        Debug.Log("Current Level: " + currentLevel);
 
         List<ItemData> choices = GetRandomItems(2);
         LevelUpUI.Instance?.ShowLevelUp(choices);
@@ -85,7 +85,7 @@ public class ExpManager : MonoBehaviour
                 player?.IncreaseMoveSpeed(item.value);
                 break;
             case StatType.AttackSpeed:
-                FindAnyObjectByType<Bullet>()?.IncreaseLifetime(item.value);
+                FindAnyObjectByType<Attacker>()?.IncreaseFirerate(item.value);
                 break;
             case StatType.Damage:
                 FindAnyObjectByType<Bullet>()?.IncreaseDamage(item.value);

@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: UpHp
   description: "HP\uAC00 \uC0C1\uC2B9\uD55C\uB2E4"
-  icon: {fileID: 0}
+  icon: {fileID: 7453828723003250051, guid: f50b453b97616d7428cd6a991a420757, type: 3}
   statType: 0
   value: 1

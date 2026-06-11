@@ -4,8 +4,10 @@ public class Attacker : MonoBehaviour
 {
     public GameObject bulletPrefab;
     public float bulletSpeed = 10f;
-    public float fireRate = 0.5f;
+    public float fireRate = 0.7f;
     private float nextFireTime = 0f;
+
+    public ItemData itemData;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -36,5 +38,20 @@ public class Attacker : MonoBehaviour
         bullet.transform.rotation = Quaternion.Euler(0f, 0f, angle);
 
         bullet.GetComponent<Rigidbody2D>().linearVelocity = direction * bulletSpeed;
+
+        if( bullet != null)
+        {
+            Bullet bulletScript = bullet.GetComponent<Bullet>();
+
+            if(bulletScript != null && itemData != null)
+            {
+                bulletScript.IncreaseDamage(itemData.value);
+            }
+        }
+    }
+
+    public void IncreaseFirerate(float amount)
+    {
+        fireRate = Mathf.Max(0.05f, fireRate - amount);
     }
 }

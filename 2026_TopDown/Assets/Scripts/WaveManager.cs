@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class WaveManager : MonoBehaviour
 {
-    [Header("Wave ¼³Á¤")]
+    [Header("Wave ï¿½ï¿½ï¿½ï¿½")]
     public float waveTime = 20f;
     private float timer;
     private bool isCleared = false;
@@ -23,7 +23,7 @@ public class WaveManager : MonoBehaviour
     [Header("Scene")]
     public string gameOverScene = "GameOver";
     public string gameClearScene = "GameClear";
-    public int totalLevels = 5;
+    public int totalLevels = 6;
 
 
 
